@@ -1,0 +1,28 @@
+# Local preferences. Keys stay in English.
+# `language` selects the published summary. Code, logs, and docs stay in English.
+
+language = "es"
+
+[identity]
+career = "Ingeniería de Sistemas"
+country = "Colombia"
+
+[news]
+enabled = true
+topics = [
+    "artificial intelligence",
+    "technology",
+    "programming",
+    "hardware",
+]
+
+[scholarship]
+enabled = true
+levels = ["undergraduate", "research internship"]
+destination = "Canada"
+
+[events]
+enabled = true
+kind = "hackathon"
+formats = ["online", "in-person"]
+location = "Barranquilla"

@@ -1,0 +1,9 @@
+services:
+  lantern:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./config/profile.toml:/app/config/profile.toml:ro
+      - ./data:/app/data

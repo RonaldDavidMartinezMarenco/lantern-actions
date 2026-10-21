@@ -1,0 +1,54 @@
+# 08:17 America/Bogota (UTC-5, no daylight saving time). Actions cron is UTC.
+# Scheduled runs execute only on the default branch. Keep this repository private.
+
+name: Lantern briefing
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 13 * * *"
+
+jobs:
+  briefing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          python-version: "3.12"
+
+      - name: Restore published-item database
+        uses: actions/cache/restore@v4
+        with:
+          path: data/lantern.db
+          key: lantern-sqlite-${{ github.run_id }}
+          restore-keys: |
+            lantern-sqlite-
+
+      - name: Install Lantern
+        run: uv sync --frozen --no-dev
+
+      - name: Run Lantern
+        env:
+          LLM_BASE_URL: https://generativelanguage.googleapis.com/v1beta/openai/
+          LLM_MODEL: gemini-3.5-flash-lite
+          BRIEFING_LANGUAGE: es
+          BRIEFING_MAX_RESULTS: "5"
+          SEARCH_MAX_RESULTS: "10"
+          DATABASE_PATH: data/lantern.db
+          BRAVE_SEARCH_API_KEY: ${{ secrets.BRAVE_SEARCH_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          DISCORD_WEBHOOK_NEWS: ${{ secrets.DISCORD_WEBHOOK_NEWS }}
+          DISCORD_WEBHOOK_SCHOLARSHIP: ${{ secrets.DISCORD_WEBHOOK_SCHOLARSHIP }}
+          DISCORD_WEBHOOK_EVENTS: ${{ secrets.DISCORD_WEBHOOK_EVENTS }}
+        run: uv run --frozen --no-dev lantern
+
+      - name: Save published-item database
+        if: always() && hashFiles('data/lantern.db') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: data/lantern.db
+          key: lantern-sqlite-${{ github.run_id }}

@@ -1,0 +1,27 @@
+[project]
+name = "lantern"
+version = "0.1.0"
+description = "Personal briefing that publishes news, scholarships, and events to Discord."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.11.0",
+    "pydantic-settings>=2.9.1",
+]
+
+[project.scripts]
+lantern = "lantern.main:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-httpx>=0.35.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
